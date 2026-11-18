@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Ember — Animated Background",
+  "version": "0.5.3",
+  "description": "Animate your own image with a dithered shader behind a new tab field that works like the browser's own. History, bookmarks and open tabs are read on this device for the field's suggestions and never sent anywhere; images stay local.",
+  "permissions": ["history", "bookmarks", "search", "tabs"],
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; connect-src 'none'; object-src 'none'; base-uri 'none'"
+  }
+}

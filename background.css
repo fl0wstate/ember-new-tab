@@ -1,0 +1,141 @@
+:root {
+  color-scheme: light dark; background: var(--page);
+  --page: #080503; --ink: #f5f2ee; --muted: #c6bfb8; --dim: #9d9792;
+  --line: #ffffff29; --line-strong: #ffffff66; --hover: #ffffff14; --chip: #ffffff14;
+  --pane: linear-gradient(155deg, #ffffff12, #ffffff03), #15171952;
+  --panel: #1b1a19f2; --menu: #171512f5; --shade: #00000026;
+}
+/* The browser's light appearance: the same page on paper. The shader
+   follows the same setting by itself (background.js). */
+@media (prefers-color-scheme: light) {
+  :root {
+    --page: #d4ccbf; --ink: #1f1b17; --muted: #5f5750; --dim: #6f6761;
+    --line: #00000021; --line-strong: #00000052; --hover: #0000000f; --chip: #0000000f;
+    --pane: linear-gradient(155deg, #ffffffb0, #ffffff70), #ffffff66;
+    --panel: #fbf8f3f2; --menu: #fbf8f3f5; --shade: #0000001a;
+  }
+}
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+/* The ember glow belongs to the default shader alone: a tab whose picture is
+   still being read opens dark and never flashes orange first. */
+:root[data-background="shader"] body {
+  background:
+    radial-gradient(ellipse at 104% 110%, #fa8b36 0%, #9b350c 19%, #321407 39%, transparent 64%),
+    var(--page);
+}
+@media (prefers-color-scheme: light) {
+  :root[data-background="shader"] body {
+    background:
+      radial-gradient(ellipse at 104% 110%, #b83d0f 0%, #fa8030 22%, #ffcc99 42%, transparent 66%),
+      var(--page);
+  }
+}
+canvas {
+  position: fixed; inset: 0; z-index: 1;
+  display: block; width: 100%; height: 100%;
+  pointer-events: none;
+  opacity: 0; transition: opacity 140ms ease-out;
+}
+canvas.drawn { opacity: 1; }
+#search {
+  position: fixed; z-index: 2; top: 47%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(560px, calc(100% - 48px)); margin: 0;
+}
+#query {
+  box-sizing: border-box; width: 100%; height: 50px;
+  padding: 13px 20px; border: 1px solid var(--line); border-radius: 16px;
+  background: var(--pane);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(22px) saturate(140%);
+  color: var(--ink); caret-color: var(--ink);
+  box-shadow: inset 0 1px 0 #ffffff18, 0 8px 24px var(--shade);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+  font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  outline: none;
+}
+#query::placeholder { color: var(--muted); opacity: 1; }
+#query:focus-visible {
+  border-color: var(--line-strong);
+  box-shadow: inset 0 1px 0 #ffffff24, 0 0 0 3px #ffffff0a, 0 8px 24px var(--shade);
+}
+/* Liquid glass: while the shader runs, it draws the field and the rows as
+   lenses over itself (background.js), and these give up their own panes.
+   Without it they keep the frosted ones above. */
+:root[data-glass="on"] #query,
+:root[data-glass="on"] #query:focus-visible {
+  background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none;
+  border-color: transparent; box-shadow: 0 10px 30px var(--shade);
+}
+:root[data-glass="on"] #suggestions {
+  background: transparent; border-color: transparent; box-shadow: 0 14px 36px var(--shade);
+}
+@media (prefers-reduced-motion: reduce) { #query, canvas { transition: none; } }
+/* The site Tab chose to search, at the head of the field. */
+#site-chip {
+  position: absolute; z-index: 1; top: 12px; left: 12px;
+  display: flex; align-items: center; gap: 6px; height: 26px; padding: 0 8px;
+  border-radius: 7px; background: var(--chip); color: var(--ink); pointer-events: none;
+  font: 600 13px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+/* The rows under the field. Opaque: a second blurred pane over the moving
+   shader would be recomposited on every frame. */
+#suggestions {
+  position: absolute; top: 58px; left: 0; box-sizing: border-box; width: 100%;
+  margin: 0; padding: 6px; list-style: none;
+  border: 1px solid var(--line); border-radius: 16px;
+  background: var(--panel); box-shadow: 0 12px 32px var(--shade);
+  font: 14px/1.3 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+#suggestions .row {
+  display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 10px;
+  border-radius: 9px; color: var(--ink); cursor: default; white-space: nowrap;
+}
+#suggestions .row[aria-selected="true"], #suggestions .row:hover { background: var(--hover); }
+#suggestions .main { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+#suggestions .detail { flex: 1 10 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--dim); font-size: 13px; }
+#suggestions .key {
+  margin-left: auto; padding: 1px 5px; border: 1px solid var(--line); border-radius: 5px;
+  color: var(--muted); font-size: 11px;
+}
+#suggestions .mark { margin-left: auto; display: flex; color: var(--dim); }
+.icon { flex: none; display: grid; place-items: center; width: 16px; height: 16px; color: var(--dim); }
+.icon img { width: 16px; height: 16px; border-radius: 3px; }
+.icon svg, .mark svg {
+  width: 16px; height: 16px; fill: none; stroke: currentColor;
+  stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round;
+}
+.icon.letter { border-radius: 4px; background: var(--chip); color: var(--muted); font: 600 9px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+[hidden] { display: none !important; }
+#custom-background {
+  position: fixed; inset: 0; z-index: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: center; pointer-events: none;
+}
+#background-options {
+  position: fixed; z-index: 3; right: 24px; bottom: 22px;
+  display: grid; place-items: center; width: 34px; height: 34px;
+  padding: 0; border: 1px solid transparent; border-radius: 8px;
+  background: transparent; color: var(--muted); cursor: pointer;
+}
+#background-options:hover { background: var(--hover); color: var(--ink); }
+#background-options:focus-visible,
+#background-menu button:focus-visible { outline: 1px solid #ee8d50; outline-offset: 3px; }
+#background-menu {
+  position: fixed; inset: auto 24px 64px auto; margin: 0;
+  min-width: 200px; padding: 6px; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--menu); color: var(--ink); box-shadow: 0 10px 32px #0005;
+}
+#background-menu::backdrop { background: transparent; }
+#background-menu button {
+  display: block; width: 100%; padding: 10px 12px; border: 0; border-radius: 7px;
+  background: transparent; color: inherit; text-align: left; cursor: pointer;
+  font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+#background-menu button:hover { background: var(--hover); }
+#background-menu button:disabled { opacity: 0.45; cursor: default; }
+#background-status {
+  position: fixed; z-index: 3; right: 24px; bottom: 64px;
+  max-width: min(320px, calc(100% - 48px)); margin: 0; padding: 12px 14px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--menu); color: var(--ink);
+  font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}

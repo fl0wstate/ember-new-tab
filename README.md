@@ -4,6 +4,10 @@
 ![Ember in Search, dark: the address field finishing github.com over a dithered painting](docs/screenshots/search-dark.jpg)
 
 
+![Demo: typing finishes an address and lists rows, arrows move through them, Tab searches YouTube, the page turns light with the browser, a past search is offered, an uploaded image is woven by the shader](docs/demo.gif)
+
+*Demo recorded with `npm run demo` from stand-in history, not a real profile.*
+
 Ember replaces the new tab page of the [Search](https://searchbrowser.app) browser ([source](https://github.com/driceroland/Search)) with a slowly drifting, dithered shader — its own embers, or any image you give it — under an address field that behaves like the browser's own: it finishes addresses as you type, lists history, bookmarks and past searches, searches a site with Tab, and sends words to your default engine.
 
 The field and its rows are liquid glass: lenses drawn by the same shader, refracting the animation behind them. Everything follows the browser's light or dark appearance as it changes.
@@ -203,7 +207,7 @@ search.js        the address field
 background.js    the shader, the glass pass, light and dark
 wallpaper.js     choosing, storing and loading the image
 test/            end-to-end test (Playwright, Chrome)
-tools/           screenshot generator
+tools/           screenshot and demo generators
 docs/            architecture notes and screenshots
 ```
 
@@ -213,6 +217,7 @@ There is no build. Edit a file, then **Reload** the extension in Search's settin
 npm install        # Playwright only, for the test and screenshots
 npm test           # needs Google Chrome installed
 npm run screenshots
+npm run demo        # records docs/demo.gif; needs ffmpeg
 ```
 
 The test serves the page under the manifest's own content security policy and covers the shader (image colours, cover crop, texture cap, animation, reduced motion, hidden-tab pause), storage (persistence, reset, a broken file), the glass (the lens sits exactly on the field), light and dark, the no-WebGL fallback, and the field against a stand-in for the browser's APIs: completion, rows, arrows, Tab, Escape, typo matching, bookmarks, addresses and default-engine search.

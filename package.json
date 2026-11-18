@@ -7,7 +7,8 @@
   "type": "module",
   "scripts": {
     "test": "node test/newtab.test.mjs",
-    "screenshots": "node tools/screenshots.mjs"
+    "screenshots": "node tools/screenshots.mjs",
+    "demo": "node tools/demo.mjs"
   },
   "devDependencies": {
     "playwright": "^1.40.0"

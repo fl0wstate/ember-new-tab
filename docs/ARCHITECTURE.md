@@ -187,7 +187,7 @@ Caveats, all of which apply:
 
 ## Things that look odd and are deliberate
 
-- **`?v=` on every file in `newtab.html`.** Search caches extension files by address; without a changed query a reloaded extension can keep running old scripts.
+- **`?v=` on every file in `newtab.html`.** A precaution against cached scripts. While developing, a file edited in place in the browser's installed copy kept being served from cache to new tabs until the page was reloaded; whether the extension's Reload ever leaves a stale copy was not tested, and a changed address rules it out.
 - **The canvas is not Retina-sharp.** At 2× the glass pass filled four times the pixels for an edge slightly crisper, and cost about half again as much GPU.
 - **The rows are opaque without WebGL and glass with it, never `backdrop-filter` over the canvas.** A blurred CSS pane over a canvas that changes every frame is recomposited every frame.
 - **JPEG for the stored image.** The shader multiplies colour by alpha anyway, so flattening onto black loses nothing it would have shown, and the file is a tenth the size of a PNG.

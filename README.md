@@ -224,7 +224,7 @@ npm run screenshots
 
 The test serves the page under the manifest's own content security policy and covers the shader (image colours, cover crop, texture cap, animation, reduced motion, hidden-tab pause), storage (persistence, reset, a broken file), the glass (the lens sits exactly on the field), light and dark, the no-WebGL fallback, and the field against a stand-in for the browser's APIs: completion, rows, arrows, Tab, Escape, typo matching, bookmarks, addresses and default-engine search.
 
-When changing the version, change it in `manifest.json` and in the `?v=` of the four files `newtab.html` loads; Search keeps extension files cached by address.
+When changing the version, change it in `manifest.json` and in the `?v=` of the four files `newtab.html` loads, so no cached copy of an older script can be reused.
 
 ## Gallery
 
